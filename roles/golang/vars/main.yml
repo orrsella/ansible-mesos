@@ -1,0 +1,7 @@
+---
+
+version: 1.4.2
+file_name: go{{ version }}.linux-amd64.tar.gz
+dest_tar: /usr/local/src/{{ file_name }}
+download_url: https://storage.googleapis.com/golang/{{ file_name }}
+go_path: /home/{{ ansible_ssh_user }}/go

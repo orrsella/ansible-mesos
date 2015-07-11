@@ -1,0 +1,33 @@
+---
+
+- name: Configure /etc/mesos/zk
+  template: src=zk.j2 dest=/etc/mesos/zk
+  notify: restart mesos-slave
+
+- name: Configure /etc/mesos-slave/ip
+  template: src=ip.j2 dest=/etc/mesos-slave/ip
+  notify: restart mesos-slave
+
+- name: Configure /etc/mesos-slave/hostname
+  template: src=hostname.j2 dest=/etc/mesos-slave/hostname
+  notify: restart mesos-slave
+
+- name: Configure /etc/mesos-slave/containerizers
+  template: src=containerizers.j2 dest=/etc/mesos-slave/containerizers
+  notify: restart mesos-slave
+
+- name: Configure /etc/mesos-slave/resources
+  template: src=resources.j2 dest=/etc/mesos-slave/resources
+  notify: restart mesos-slave
+
+- name: Configure /etc/mesos-slave/executor_registration_timeout
+  template: src=executor_registration_timeout.j2 dest=/etc/mesos-slave/executor_registration_timeout
+  notify: restart mesos-slave
+
+- name: Enable mesos-slave service
+  service: name=mesos-slave state=started enabled=yes
+
+- name: Add mesos-dns entries to resolv.conf
+  lineinfile: dest=/etc/resolvconf/resolv.conf.d/base line="nameserver {{ hostvars[item].ansible_eth0.ipv4.address }}" insertbefore=BOF
+  with_items: groups['mesos-masters']
+  notify: run resolvconf

@@ -1,0 +1,30 @@
+---
+
+- name: Install marathon
+  apt: pkg=marathon state=present
+
+- name: Create /etc/marathon/conf dir
+  file: path=/etc/marathon/conf state=directory
+
+- name: Configure /etc/marathon/conf/master
+  template: src=master.j2 dest=/etc/marathon/conf/master
+  notify: restart marathon
+
+- name: Configure /etc/marathon/conf/zk
+  template: src=zk.j2 dest=/etc/marathon/conf/zk
+  notify: restart marathon
+
+- name: Configure /etc/marathon/conf/hostname
+  template: src=hostname.j2 dest=/etc/marathon/conf/hostname
+  notify: restart marathon
+
+- name: Configure /etc/marathon/conf/http_port
+  template: src=http_port.j2 dest=/etc/marathon/conf/http_port
+  notify: restart marathon
+
+- name: Configure /etc/marathon/conf/task_launch_timeout
+  template: src=task_launch_timeout.j2 dest=/etc/marathon/conf/task_launch_timeout
+  notify: restart marathon
+
+- name: Enable marathon service
+  service: name=marathon state=started enabled=yes

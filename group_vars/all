@@ -1,0 +1,12 @@
+---
+
+ip: "{{ hostvars[inventory_hostname].ansible_eth0.ipv4.address }}"
+
+zk_port: 2181
+marathon_port: 5060
+#mesos_master_port: 5050
+#mesos_slave_port: 5051
+
+zk_hosts: "{% for host in groups['zookeepers'] %}{{ hostvars[host].ansible_eth0.ipv4.address }}:{{ zk_port }}{% if not loop.last %},{% endif %}{% endfor %}"
+zk_mesos: "zk://{{ zk_hosts }}/mesos"
+

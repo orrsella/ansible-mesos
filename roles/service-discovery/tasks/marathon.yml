@@ -1,0 +1,10 @@
+---
+
+- name: Create /usr/local/marathon directory
+  file: path=/usr/local/marathon state=directory
+
+- name: Configure /usr/local/marathon/servers
+  template: src=servers.j2 dest=/usr/local/marathon/servers
+
+- name: Create get_app_servers script
+  template: src=get_app_servers.j2 dest={{ get_app_servers_script }} mode=0777

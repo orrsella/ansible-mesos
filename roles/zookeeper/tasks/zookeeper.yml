@@ -1,0 +1,17 @@
+---
+
+- name: Install zookeeper
+  apt: pkg={{ item }} state=present
+  with_items:
+    - zookeeper
+    - zookeeperd
+
+- name: Configure /etc/zookeeper/conf/myid
+  template: src=myid.j2 dest=/etc/zookeeper/conf/myid
+
+- name: Configure /etc/zookeeper/conf/zoo.cfg
+  template: src=zoo.cfg.j2 dest=/etc/zookeeper/conf/zoo.cfg
+  notify: restart zookeeper
+
+- name: Enable zookeeper service
+  service: name=zookeeper state=started enabled=yes

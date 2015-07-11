@@ -1,0 +1,5 @@
+---
+
+mdns_root: /usr/local/mesos-dns
+mdns_bin: "{{ mdns_root}}/bin"
+mdns_binary: "{{ mdns_bin }}/mesos-dns"

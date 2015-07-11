@@ -1,0 +1,24 @@
+---
+
+- name: Install haproxy
+  apt: pkg=haproxy state=present
+
+- name: Enable haproxy
+  copy: src=haproxy dest=/etc/default/haproxy
+  notify: restart haproxy
+
+- name: Create /usr/local/haproxy directory
+  file: path=/usr/local/haproxy state=directory
+
+- name: Create haproxy_marathon script
+  template: src=haproxy_marathon.j2 dest=/usr/local/haproxy/haproxy_marathon mode=0777
+
+- name: Config cron job for haproxy_marathon script
+  cron: name="haproxy-marathon-cron" minute="*/1" job="/usr/local/haproxy/haproxy_marathon"
+
+- name: Run haproxy_marathon script to generate first haproxy.cfg
+  command: /usr/local/haproxy/haproxy_marathon
+  changed_when: false
+
+- name: Ensure haproxy service is running and enabled
+  service: name=haproxy state=started enabled=yes

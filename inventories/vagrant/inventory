@@ -1,0 +1,14 @@
+[zookeepers]
+default zk_server_id=1
+
+[mesos-masters]
+default
+
+[mesos-slaves]
+default
+
+[marathons]
+default
+
+[load-balancers]
+default

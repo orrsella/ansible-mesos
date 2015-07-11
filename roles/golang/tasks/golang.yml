@@ -1,0 +1,25 @@
+---
+
+- name: Check if Golang is installed
+  command: test -x /usr/local/bin/go
+  register: go_installed
+  ignore_errors: True
+  changed_when: false
+
+- name: Download Golang
+  get_url: url={{ download_url }} dest={{ dest_tar }}
+  when: go_installed|failed
+
+- name: Extract Golang
+  command: tar -C /usr/local -xzf {{ dest_tar }} creates=/usr/local/bin/go
+
+- name: Symlink Go into /usr/local/bin
+  file: src=/usr/local/go/bin/go dest=/usr/local/bin/go state=link
+
+- name: Create GOPATH dir
+  file: path={{ go_path }} state=directory
+
+- name: Install Godep
+  command: go get github.com/tools/godep creates={{ go_path }}/bin/godep
+  environment:
+    GOPATH: "{{ go_path }}"

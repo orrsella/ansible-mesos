@@ -1,0 +1,3 @@
+---
+
+get_app_servers_script: /usr/local/marathon/get_app_servers

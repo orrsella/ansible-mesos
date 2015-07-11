@@ -1,0 +1,24 @@
+---
+
+- name: Configure /etc/mesos/zk
+  template: src=zk.j2 dest=/etc/mesos/zk
+  notify: restart mesos-master
+
+- name: Configure /etc/mesos-master/quorum
+  template: src=quorum.j2 dest=/etc/mesos-master/quorum
+  notify: restart mesos-master
+
+- name: Configure /etc/mesos-master/ip
+  template: src=ip.j2 dest=/etc/mesos-master/ip
+  notify: restart mesos-master
+
+- name: Configure /etc/mesos-master/hostname
+  template: src=hostname.j2 dest=/etc/mesos-master/hostname
+  notify: restart mesos-master
+
+- name: Configure /etc/mesos-master/cluster
+  template: src=cluster.j2 dest=/etc/mesos-master/cluster
+  notify: restart mesos-master
+
+- name: Enable mesos-master service
+  service: name=mesos-master state=started enabled=yes

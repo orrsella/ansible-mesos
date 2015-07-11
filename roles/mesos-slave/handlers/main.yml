@@ -1,0 +1,7 @@
+---
+
+- name: restart mesos-slave
+  service: name=mesos-slave state=restarted
+
+- name: run resolvconf
+  command: resolvconf -u

@@ -1,0 +1,3 @@
+---
+
+- include: golang.yml tags=go,golang

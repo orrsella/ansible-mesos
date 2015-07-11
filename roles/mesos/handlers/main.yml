@@ -1,0 +1,13 @@
+---
+
+- name: disable mesos-master service
+  service: name=mesos-master enabled=no
+  when: "'mesos-masters' not in group_names"
+
+- name: disable mesos-slave service
+  service: name=mesos-slave enabled=no
+  when: "'mesos-slaves' not in group_names"
+
+- name: disable zookeeper service
+  service: name=zookeeper enabled=no
+  when: "'zookeepers' not in group_names"

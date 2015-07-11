@@ -1,0 +1,12 @@
+{
+  "zk": "{{ zk_mesos }}",
+  "masters": [{% for host in groups['mesos-masters'] %}"{{ hostvars[host].ansible_eth0.ipv4.address }}:5050"{% if not loop.last %},{% endif %}{% endfor %}],
+  "refreshSeconds": 60,
+  "ttl": 60,
+  "domain": "mesos",
+  "port": 53,
+  "resolvers": ["8.8.8.8"],
+  "timeout": 5,
+  "listener": "{{ ip }}",
+  "email": "root.mesos-dns.mesos"
+}

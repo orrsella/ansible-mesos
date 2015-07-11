@@ -1,0 +1,38 @@
+---
+
+- hosts: all
+  user: root
+  sudo: true
+
+  # user passwords need to be encrypted:
+  # $ mkpasswd --method=SHA-512 <plaintext-password>
+
+  vars:
+    root_pwd: TODO
+    deploy_user: deploy
+    deploy_pwd: TODO
+    deploy_sudoers: '{{ deploy_user }}  ALL=(ALL) NOPASSWD: ALL'
+
+  tasks:
+    - name: Change root password
+      user: name=root password={{ root_pwd }} state=present
+
+    - name: Create ansible deploy user
+      user: name={{ deploy_user }} password={{ deploy_pwd }} shell=/bin/bash state=present generate_ssh_key=yes
+
+    - name: Add current host public key to deploy user's authorized_keys
+      authorized_key: user={{ deploy_user }} key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}" state=present
+
+    - name: Add deploy user to sudoers
+      lineinfile: dest=/etc/sudoers backup=yes regexp='^{{ deploy_user }}' line="{{ deploy_sudoers }}" state=present
+
+    - name: Generate locale
+      locale_gen: name=en_US.UTF-8 state=present
+
+    - name: Update sshd config to disallow root logins
+      lineinfile: dest=/etc/ssh/sshd_config regexp=^PermitRootLogin line="PermitRootLogin no" state=present
+      notify: restart ssh
+
+  handlers:
+    - name: restart ssh
+      service: name=ssh state=restarted

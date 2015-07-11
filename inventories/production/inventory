@@ -1,0 +1,8 @@
+[zookeepers]
+<ip_address> zk_server_id=1
+
+[mesos-masters]
+<ip_address>
+
+[mesos-slaves]
+<ip_address>

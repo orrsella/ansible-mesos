@@ -1,0 +1,1 @@
+{{ ((groups['mesos-masters'] | length) / 2) | round(0, 'floor') | int + 1 }}

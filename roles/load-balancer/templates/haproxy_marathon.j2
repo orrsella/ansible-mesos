@@ -1,0 +1,84 @@
+#!/bin/bash
+#
+# Create haproxy config file from Marathon for given app id
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+readonly MARATHON_APP_ID='hatch-nginx'
+readonly MARATHON_APP_PORT_INDEX=1
+readonly TMP_FILE=$(mktemp /tmp/XXXXXXXXXX)
+readonly CONFIG_FILE=/etc/haproxy/haproxy.cfg
+
+function header() {
+cat <<EOF
+global
+    daemon
+    maxconn 4096
+
+    log /dev/log    local0
+    log /dev/log    local1 notice
+    chroot /var/lib/haproxy
+    user haproxy
+    group haproxy
+
+defaults
+    mode http
+    retries 3
+    timeout connect 5000ms
+    timeout client 50000ms
+    timeout server 50000ms
+
+    log     global
+    option  httplog
+    option  dontlognull
+
+    errorfile 400 /etc/haproxy/errors/400.http
+    errorfile 403 /etc/haproxy/errors/403.http
+    errorfile 408 /etc/haproxy/errors/408.http
+    errorfile 500 /etc/haproxy/errors/500.http
+    errorfile 502 /etc/haproxy/errors/502.http
+    errorfile 503 /etc/haproxy/errors/503.http
+    errorfile 504 /etc/haproxy/errors/504.http
+
+frontend http-in
+    bind *:80
+    default_backend servers
+
+backend servers
+EOF
+}
+
+function pipe_to() {
+  sudo tee -a "$1" > /dev/null
+}
+
+function main() {
+  local i=0
+  local servers
+
+  # Write static file header
+  header | pipe_to $TMP_FILE
+
+  # Get servers from marathon
+  servers=$({{ get_app_servers_script }} $MARATHON_APP_ID $MARATHON_APP_PORT_INDEX)
+
+  # Write servers list
+  for server in $servers; do
+    echo "    server server$i $server check" | pipe_to $TMP_FILE
+    let ++i
+  done
+
+  # Copy config and reload service if configs are different
+  if ! diff -q $TMP_FILE $CONFIG_FILE >/dev/null ; then
+    sudo rm -f $CONFIG_FILE
+    cat $TMP_FILE | pipe_to $CONFIG_FILE
+    sudo service haproxy reload
+  fi
+
+  # Cleanup
+  rm -f $TMP_FILE
+}
+
+main "$@"

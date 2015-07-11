@@ -1,0 +1,3 @@
+---
+
+- include: haproxy.yml tags=load-balancer,haproxy

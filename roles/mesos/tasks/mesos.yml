@@ -1,0 +1,14 @@
+---
+
+- name: Trust the mesosphere apt key
+  apt_key: keyserver=keyserver.ubuntu.com id=E56151BF state=present
+
+- name: Add the mesosphere apt repository
+  apt_repository: repo='deb http://repos.mesosphere.io/ubuntu trusty main' state=present update_cache=yes
+
+- name: Install mesos
+  apt: pkg=mesos state=present
+  notify:
+    - disable mesos-master service
+    - disable mesos-slave service
+    - disable zookeeper service

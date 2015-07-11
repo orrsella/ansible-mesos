@@ -1,0 +1,31 @@
+#!/bin/bash
+#
+# Create haproxy config file from Marathon for given app id
+#
+# NOTE: Don't use 'set -o errexit' in this script because we rely on curl's failure code to know if
+#       we need to check the next marathon host
+
+set -o nounset
+set -o pipefail
+
+readonly MARATHONS=/usr/local/marathon/servers
+
+function get_app_servers() {
+  local marathon_app_id="$1"
+  local marathon_app_port_index=${2:-1} # 1-based
+  local request_url
+  local response
+
+  # Try each of the marathon hosts, in-case one of them isn't available
+  for marathon_host in $(cat $MARATHONS); do
+    request_url="http://$marathon_host/v2/apps/$marathon_app_id/tasks"
+    response=$(curl --fail --silent -H 'Accept: text/plain' $request_url | sed -n "$marathon_app_port_index p")
+
+    if [[ "$?" -eq 0 ]]; then
+      echo $response | cut -d ' ' -f3- | tr ' ' '\n'
+      break
+    fi
+  done
+}
+
+get_app_servers "$@"

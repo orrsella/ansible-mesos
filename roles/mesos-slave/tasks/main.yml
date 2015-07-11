@@ -1,0 +1,3 @@
+---
+
+- include: mesos-slave.yml tags=mesos,mesos-slave

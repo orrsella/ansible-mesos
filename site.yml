@@ -1,0 +1,38 @@
+---
+
+- hosts: all
+  user: deploy
+  sudo: true
+  roles:
+    - common
+
+- hosts: zookeepers
+  user: deploy
+  sudo: true
+  roles:
+    - zookeeper
+
+- hosts: mesos-masters
+  user: deploy
+  sudo: true
+  roles:
+    - mesos-master
+    - mesos-dns
+
+- hosts: mesos-slaves
+  user: deploy
+  sudo: true
+  roles:
+    - mesos-slave
+
+- hosts: marathons
+  user: deploy
+  sudo: true
+  roles:
+    - marathon
+
+# - hosts: load-balancers
+#   user: deploy
+#   sudo: true
+#   roles:
+#     - load-balancer

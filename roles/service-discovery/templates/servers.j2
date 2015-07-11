@@ -1,0 +1,3 @@
+{% for host in groups['marathons'] %}
+{{ hostvars[host].ansible_eth0.ipv4.address }}:{{ marathon_port }}
+{% endfor %}

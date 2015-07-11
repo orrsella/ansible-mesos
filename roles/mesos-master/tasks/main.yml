@@ -1,0 +1,3 @@
+---
+
+- include: mesos-master.yml tags=mesos,mesos-master

@@ -1,0 +1,42 @@
+---
+
+# - name: Check if mesos-dns is installed
+#   command: test -x /usr/local/mesos-dns/bin/mesos-dns
+#   register: mdns_installed
+#   ignore_errors: True
+#   changed_when: false
+
+# - name: Build and install mesos-dns
+#   shell: mkdir -p /usr/local/mesos-dns && go get github.com/miekg/dns github.com/mesosphere/mesos-dns
+#   environment:
+#     PATH: "{{ ansible_env.HOME }}/go/bin:/usr/local/bin:/usr/bin:/bin"
+#     GOPATH: "{{ ansible_env.HOME }}/pkg"
+#     GOROOT: "{{ ansible_env.HOME }}/go"
+#   when: mdns_installed|failed
+
+# - name: Create /usr/local/mesos-dns dir
+#   file: path=/usr/local/mesos-dns state=directory
+
+# - name: Clone mesos-dns git repo
+#   git: repo=https://github.com/mesosphere/mesos-dns.git dest=/usr/local/mesos-dns/
+
+- name: Build mesos-dns
+  command: go get github.com/mesosphere/mesos-dns creates={{ mdns_binary }}
+  environment:
+    GOPATH: "{{ go_path }}"
+
+- name: Create mesos-dns/bin dir
+  file: path={{ mdns_bin }} state=directory
+
+- name: Copy mesos-dns binary
+  command: cp {{ go_path }}/bin/mesos-dns {{ mdns_bin }} creates={{ mdns_binary }}
+
+- name: Symlink mesos-dns into /usr/local/bin
+  file: src={{ mdns_binary }} dest=/usr/local/bin/mesos-dns state=link
+
+- name: Configure mesos-dns/config.json
+  template: src=config.json.j2 dest={{ mdns_root }}/config.json
+  # notify: restart mesos-master
+
+# - name: Add mesos-dns entry to resolv.config
+#   lineinfile: dest=/etc/resolvconf/resolv.conf.d/base line="nameserver {{ ip }}"
