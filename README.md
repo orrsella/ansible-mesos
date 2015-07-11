@@ -11,7 +11,7 @@ Includes:
 * Marathon
 * Docker
 
-and all of their dependencies. You can run everything in one box, or have a highly-available setup with every component running on it's own server with multiple masters/zookeepers (just edit `inventories/production/inventory`).
+and all of their dependencies. You can run everything in one box, or have a highly-available setup with every component running on its own server with multiple masters/zookeepers (just edit `inventories/production/inventory`).
 
 ## Requirements
 
@@ -38,9 +38,11 @@ $ vagrant provision
 Replace `TODO`s in `new-server.yml` with your own passwords as instructed. When a new server is added to the cluster, insert it to `inventories/production/inventory` and run (ubuntu trusty64 14.04 expected):
 
 ```bash
-$ ansible-playbook -i inventories/production new-server.yml                       # configure all servers
-# or:
-$ ansible-playbook -i inventories/production -l <new-server-host> new-server.yml  # configure single server
+# configure all servers
+$ ansible-playbook -i inventories/production new-server.yml
+
+# or configure single server:
+$ ansible-playbook -i inventories/production -l <new-server-host> new-server.yml
 ```
 
 #### 2. Run ansible

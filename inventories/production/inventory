@@ -6,3 +6,6 @@
 
 [mesos-slaves]
 <ip_address>
+
+[marathons]
+<ip_address>
