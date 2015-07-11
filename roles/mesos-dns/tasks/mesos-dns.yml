@@ -36,7 +36,10 @@
 
 - name: Configure mesos-dns/config.json
   template: src=config.json.j2 dest={{ mdns_root }}/config.json
-  # notify: restart mesos-master
+  notify: restart mesos-dns
 
-# - name: Add mesos-dns entry to resolv.config
-#   lineinfile: dest=/etc/resolvconf/resolv.conf.d/base line="nameserver {{ ip }}"
+- name: Create /etc/init.d/mesos-dns script
+  template: src=init.d/mesos-dns.j2 dest=/etc/init.d/mesos-dns mode=0777
+
+- name: Enable mesos-dns service
+  service: name=mesos-dns state=started enabled=yes

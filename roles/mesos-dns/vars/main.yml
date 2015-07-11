@@ -3,3 +3,4 @@
 mdns_root: /usr/local/mesos-dns
 mdns_bin: "{{ mdns_root}}/bin"
 mdns_binary: "{{ mdns_bin }}/mesos-dns"
+pid_file: "/var/run/mesos-dns.pid"
