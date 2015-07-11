@@ -11,7 +11,7 @@ Includes:
 * Marathon
 * Docker
 
-and all of their dependencies.
+and all of their dependencies. You can run everything in one box, or have a highly-available setup with every component running on it's own server with multiple masters/zookeepers (just edit `inventories/production/inventory`).
 
 ## Requirements
 
@@ -20,6 +20,8 @@ and all of their dependencies.
 * [Vagrant-cachier plugin](https://github.com/fgrehm/vagrant-cachier) – `$ vagrant plugin install vagrant-cachier` (optional but recommended)
 
 ## Test
+
+Run everything in a single virtual machine:
 
 ```bash
 $ vagrant up
@@ -37,6 +39,7 @@ Replace `TODO`s in `new-server.yml` with your own passwords as instructed. When 
 
 ```bash
 $ ansible-playbook -i inventories/production new-server.yml                       # configure all servers
+# or:
 $ ansible-playbook -i inventories/production -l <new-server-host> new-server.yml  # configure single server
 ```
 
