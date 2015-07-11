@@ -38,7 +38,7 @@ $ vagrant provision
 Replace `TODO`s in `new-server.yml` with your own passwords as instructed. When a new server is added to the cluster, insert it to `inventories/production/inventory` and run (ubuntu trusty64 14.04 expected):
 
 ```bash
-# configure all servers
+# configure all servers:
 $ ansible-playbook -i inventories/production new-server.yml
 
 # or configure single server:
