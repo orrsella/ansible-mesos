@@ -24,7 +24,7 @@ and all of their dependencies.
 ```bash
 $ vagrant up
 $ vagrant ssh
-// reapply changes:
+# re-apply changes:
 $ vagrant provision
 ```
 
