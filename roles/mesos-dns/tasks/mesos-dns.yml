@@ -1,25 +1,5 @@
 ---
 
-# - name: Check if mesos-dns is installed
-#   command: test -x /usr/local/mesos-dns/bin/mesos-dns
-#   register: mdns_installed
-#   ignore_errors: True
-#   changed_when: false
-
-# - name: Build and install mesos-dns
-#   shell: mkdir -p /usr/local/mesos-dns && go get github.com/miekg/dns github.com/mesosphere/mesos-dns
-#   environment:
-#     PATH: "{{ ansible_env.HOME }}/go/bin:/usr/local/bin:/usr/bin:/bin"
-#     GOPATH: "{{ ansible_env.HOME }}/pkg"
-#     GOROOT: "{{ ansible_env.HOME }}/go"
-#   when: mdns_installed|failed
-
-# - name: Create /usr/local/mesos-dns dir
-#   file: path=/usr/local/mesos-dns state=directory
-
-# - name: Clone mesos-dns git repo
-#   git: repo=https://github.com/mesosphere/mesos-dns.git dest=/usr/local/mesos-dns/
-
 - name: Build mesos-dns
   command: go get github.com/mesosphere/mesos-dns creates={{ mdns_binary }}
   environment:

@@ -19,10 +19,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.provision "ansible" do |ansible|
-    # ansible.verbose = "v"
     ansible.playbook = "site.yml"
     ansible.inventory_path = "inventories/vagrant/inventory"
-    # ansible.tags = "mesos-master"
   end
 
 end
