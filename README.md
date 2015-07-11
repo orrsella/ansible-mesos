@@ -24,22 +24,23 @@ and all of their dependencies.
 ```bash
 $ vagrant up
 $ vagrant ssh
+
 # re-apply changes:
 $ vagrant provision
 ```
 
 ## Production
 
-### Add new server
+#### 1. Add new server
 
-Replace `TODO`s in `new-server.yml` with your own passwords as instructed. When a new server is added, add it to `inventories/production` and run (ubuntu trusty64 14.04 expected):
+Replace `TODO`s in `new-server.yml` with your own passwords as instructed. When a new server is added to the cluster, insert it to `inventories/production/inventory` and run (ubuntu trusty64 14.04 expected):
 
 ```bash
 $ ansible-playbook -i inventories/production new-server.yml                       # configure all servers
 $ ansible-playbook -i inventories/production -l <new-server-host> new-server.yml  # configure single server
 ```
 
-### Run ansible
+#### 2. Run ansible
 
 ```bash
 $ ansible-playbook -i inventories/production site.yml
