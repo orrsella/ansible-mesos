@@ -1,6 +1,6 @@
 # ansible-mesos
 
-Ansible playbooks for setting up and maintaining a fully-functionaly [Mesos](http://mesos.apache.org/) cluster.
+Ansible playbooks for setting-up and maintaining a fully-functionaly [Mesos](http://mesos.apache.org/) cluster.
 
 Includes:
 
@@ -21,13 +21,18 @@ and all of their dependencies.
 
 ## Test
 
-
+```bash
+$ vagrant up
+$ vagrant ssh
+// reapply changes:
+$ vagrant provision
+```
 
 ## Production
 
 ### Add new server
 
-When a new server is added, add it to `inventories/production` and run (ubuntu trusty64 14.04 expected):
+Replace `TODO`s in `new-server.yml` with your own passwords as instructed. When a new server is added, add it to `inventories/production` and run (ubuntu trusty64 14.04 expected):
 
 ```bash
 $ ansible-playbook -i inventories/production new-server.yml                       # configure all servers
